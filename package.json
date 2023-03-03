@@ -1,0 +1,15 @@
+{
+  "name": "dreambooth-image-resize-nodejs",
+  "version": "0.1.0",
+  "description": "A Nodejs script to quickly resize images to the required 512x512px for Dreambooth model training.",
+  "main": "resize.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "James Bell <hello@jamesbell.net>",
+  "license": "ISC",
+  "dependencies": {
+    "sharp": "^0.31.3"
+  }
+}
