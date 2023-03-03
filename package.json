@@ -8,7 +8,7 @@
   },
   "keywords": [],
   "author": "James Bell <hello@jamesbell.net>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "sharp": "^0.31.3"
   }
