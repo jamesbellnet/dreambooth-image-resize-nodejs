@@ -1,3 +1,4 @@
+const fs = require('fs')
 const sharp = require("sharp")
 
 /**
@@ -50,7 +51,7 @@ async function setResizeParams(image) {
  * @param {string} image Image path
  * @returns {Promise<Buffer>}
  */
-async function resizeImage(image) {
+async function resize(image) {
     const params = await setResizeParams(image)
     return await sharp(image).resize(params).toBuffer()
 }
@@ -60,8 +61,9 @@ async function resizeImage(image) {
  * compress and correctly format the image prior to output.
  *
  * @param {Buffer} resized The resized image buffer
+ * @param {string} newFilename The new filename for the image
  */
-async function crop(resized) {
+async function crop(resized, newFilename) {
     let crop = { width: 512, height: 512 }
     const dimensions = await getImageDimensions(resized)
 
@@ -76,8 +78,24 @@ async function crop(resized) {
     sharp(resized)
         .extract(crop)
         .toFormat("jpeg", { mozjpeg: true })
-        .toFile("processed-images/portrait-512.jpg")
+        .toFile(`processed-images/${newFilename}`)
 }
 
-const image = "process-images/portrait.jpg"
-resizeImage(image).then(crop)
+/** Run the processing */
+const processImageDir = "./process-images"
+fs.readdir(processImageDir, (err, images) => {
+    if (err) {
+        throw new Error("Error getting directory information.")
+    } else {
+        images.forEach(image => {
+            const filename = image.slice(0, image.lastIndexOf("."))
+            const extension = image.slice(image.lastIndexOf("."))
+            const newFilename = `${filename}-512${extension}`
+
+            resize(`${processImageDir}/${image}`)
+                .then(resizedImage => crop(
+                    resizedImage, newFilename
+                ))
+        })
+    }
+})
